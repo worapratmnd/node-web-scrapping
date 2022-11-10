@@ -75,16 +75,7 @@ export async function webScrapping(
   url: string,
   focusEl: string
 ): Promise<string> {
-  let browser;
-  if (process.env.ENV_MODE.toUpperCase() === "PROD") {
-    console.log("Browser PROD");
-    browser = await puppeteer.launch({
-      headless: true,
-      args: ["--no-sandbox"],
-    });
-  } else {
-    browser = await puppeteer.launch();
-  }
+  let browser = await getBrowser();
   const page = await browser.newPage();
 
   await page.goto(url);
@@ -95,9 +86,23 @@ export async function webScrapping(
     // return "World";
     return document.querySelector(resultsSelector).textContent;
   }, resultsSelector);
-  await browser.close();
+  await page.close();
+  // await browser.close();
 
   return result;
+}
+
+async function getBrowser(): Promise<puppeteer.Browser> {
+  let browser;
+  if (process.env.ENV_MODE.toUpperCase() === "PROD") {
+    browser = await puppeteer.launch({
+      headless: true,
+      args: ["--no-sandbox"],
+    });
+  } else {
+    browser = await puppeteer.launch();
+  }
+  return browser;
 }
 
 // scrapping();
