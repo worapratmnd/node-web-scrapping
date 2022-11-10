@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+  node-app:
+    container_name: node-app
+    restart: always
+    image: node-web-scrapping
+    environment:
+      - ENV_MODE=PROD
+      - DB_CONN_STRING=${DB_CONN_STRING}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - LINE_TOKEN=${LINE_TOKEN}
+    ports:
+       - 4005:4005
+    network_mode: host
