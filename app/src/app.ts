@@ -1,5 +1,5 @@
 import * as dotenv from "dotenv";
-import { scrapping, webScrapping } from "./scrapping";
+import { webScrapping } from "./scrapping";
 import * as schedule from "node-schedule";
 import {
   connectToDatabase,
@@ -17,7 +17,7 @@ async function main() {
   await connectToDatabase();
 }
 
-const cron = schedule.scheduleJob("0 */5 * * * *", async () => {
+const cron = schedule.scheduleJob("0 * * * * *", async () => {
   let priceConfig = await getPriceConfig();
   for (let i = 0; i < priceConfig.length; i++) {
     console.log("JOBS: " + priceConfig[i].web);
