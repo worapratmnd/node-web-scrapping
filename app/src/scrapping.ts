@@ -11,10 +11,9 @@ export async function webScrapping(
 
   await page.goto(url);
   const resultsSelector = focusEl;
-  await page.waitForSelector(resultsSelector);
+  await page.waitForSelector(resultsSelector, { visible: true });
+  // await page.waitForTimeout(1000);
   const result = await page.evaluate((resultsSelector) => {
-    // console.log("resultsSelector: ", resultsSelector);
-    // return "World";
     return document.querySelector(resultsSelector).textContent;
   }, resultsSelector);
   await page.close();
@@ -32,6 +31,7 @@ async function getBrowser(): Promise<puppeteer.Browser> {
     browser = await puppeteer.launch({
       headless: true,
       args: ["--no-sandbox"],
+      timeout: 0,
     });
   } else {
     browser = await puppeteer.launch();

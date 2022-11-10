@@ -15,12 +15,19 @@ async function main() {
   dotenv.config();
   console.log("env DB_CONN_STRING: " + process.env.DB_CONN_STRING);
   await connectToDatabase();
+  startWebScrapping();
 }
 
-const cron = schedule.scheduleJob("0 * * * * *", async () => {
+const cron = schedule.scheduleJob("0 */5 * * * *", async () => {
+  await startWebScrapping();
+});
+
+async function startWebScrapping() {
   let priceConfig = await getPriceConfig();
   for (let i = 0; i < priceConfig.length; i++) {
-    console.log("JOBS: " + priceConfig[i].web);
+    console.log(
+      "JOBS: " + priceConfig[i].web + " : " + priceConfig[i].itemName
+    );
     let priceStr = await webScrapping(
       priceConfig[i].url,
       priceConfig[i].priceSelector
@@ -47,6 +54,6 @@ const cron = schedule.scheduleJob("0 * * * * *", async () => {
     console.log("PRICE: " + priceStr);
     console.log("END: " + priceConfig[i].web);
   }
-});
+}
 
 main();
